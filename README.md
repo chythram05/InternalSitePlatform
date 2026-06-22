@@ -2,7 +2,7 @@
 
 Deploy internal static sites behind Cloudflare Access using [Cloudflare Workers for Platforms](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/) and [D1](https://developers.cloudflare.com/d1/).
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/chythra-w1/internal-sites-template)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/chythra-w1/InternalSitePlatform)
 
 <!-- dash-content-start -->
 
@@ -34,15 +34,78 @@ Internal Sites gives employees a simple deployment portal for company-only stati
 
 ## Getting Started
 
-Outside of this repository, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/):
+Click the **Deploy to Cloudflare** button above to create and deploy your own copy of this platform.
+
+Deploy to Cloudflare will:
+
+- Clone this repository into your GitHub or GitLab account.
+- Provision the D1 database and bind it to the Worker.
+- Deploy the Worker.
+- Configure Workers Builds so future pushes deploy automatically.
+
+During the create and deploy flow, enter the prompted values:
+
+| Value | Description |
+| --- | --- |
+| `ACCOUNT_ID` | Cloudflare account ID that owns the Workers for Platforms dispatch namespace. |
+| `DISPATCH_NAMESPACE_API_TOKEN` | API token with `Account: Workers Scripts: Edit` permission. |
+
+The API token is used by the deployed platform to publish uploaded internal sites into the dispatch namespace.
+
+You do not need to edit `wrangler.toml` or manually create a D1 database when using the Deploy to Cloudflare button.
+
+You can also start locally with [C3](https://developers.cloudflare.com/pages/get-started/c3/):
 
 ```bash
-npm create cloudflare@latest -- --template=https://github.com/chythra-w1/internal-sites-template
+npm create cloudflare@latest -- --template=https://github.com/chythra-w1/InternalSitePlatform
 ```
 
-You can also click the **Deploy to Cloudflare** button above to deploy from this repository.
-
 ## Setup Steps
+
+### 1. Deploy the Platform
+
+Click the **Deploy to Cloudflare** button and complete the create and deploy flow.
+
+### 2. Configure Cloudflare Access
+
+Create a Cloudflare Access self-hosted application for the deployed Worker.
+
+Protect both the deployment portal and internal site URLs:
+
+```txt
+https://internal-company.com/deploy*
+https://*.internal-company.com/*
+```
+
+Allow your company users through your identity provider. Without Access, the Worker returns `401` unless `DISABLE_ACCESS_IDENTITY_CHECK=true`.
+
+### 3. Configure Domain Routing
+
+Add Worker routes for the deployment portal and wildcard internal site hostnames:
+
+```toml
+routes = [
+  { pattern = "internal-company.com/deploy*", zone_name = "internal-company.com" },
+  { pattern = "*.internal-company.com/*", zone_name = "internal-company.com" }
+]
+```
+
+Create proxied DNS records for:
+
+```txt
+internal-company.com
+*.internal-company.com
+```
+
+Open the deployment portal at:
+
+```txt
+https://internal-company.com/deploy
+```
+
+## Manual Wrangler Setup
+
+Use these steps only if you are not using the Deploy to Cloudflare button.
 
 ### 1. Install Dependencies
 
@@ -50,14 +113,18 @@ You can also click the **Deploy to Cloudflare** button above to deploy from this
 npm install
 ```
 
-### 2. Create the Dispatch Namespace
+### 2. Create Required Resources
 
-Deploy to Cloudflare provisions the D1 database and binds it to the Worker automatically. You do not need to create a D1 database before clicking the deploy button.
-
-Create the Workers for Platforms dispatch namespace if you are deploying manually with Wrangler:
+Create the Workers for Platforms dispatch namespace:
 
 ```bash
 npx wrangler dispatch-namespace create internal-sites-template
+```
+
+Create a D1 database and update `database_id` in `wrangler.toml`:
+
+```bash
+npx wrangler d1 create internal-sites-template
 ```
 
 ### 3. Configure Variables and Secrets
@@ -85,54 +152,13 @@ Account: Workers Scripts: Edit
 
 For local development, copy `.dev.vars.example` to `.dev.vars` and fill in your values.
 
-If you are not using Deploy to Cloudflare, create a D1 database manually and update the `database_id` in `wrangler.toml`:
-
-```bash
-npx wrangler d1 create internal-sites-template
-```
-
-### 4. Configure Cloudflare Access
-
-Create a Cloudflare Access self-hosted application for the deployed Worker.
-
-Protect both the deployment portal and internal site URLs:
-
-```txt
-https://internal-company.com/deploy*
-https://*.internal-company.com/*
-```
-
-Allow your company users through your identity provider. Without Access, the Worker returns `401` unless `DISABLE_ACCESS_IDENTITY_CHECK=true`.
-
-### 5. Configure Domain Routing
-
-Add Worker routes for the deployment portal and wildcard internal site hostnames:
-
-```toml
-routes = [
-  { pattern = "internal-company.com/deploy*", zone_name = "internal-company.com" },
-  { pattern = "*.internal-company.com/*", zone_name = "internal-company.com" }
-]
-```
-
-Create proxied DNS records for:
-
-```txt
-internal-company.com
-*.internal-company.com
-```
-
-### 6. Deploy
+### 4. Deploy
 
 ```bash
 npm run deploy
 ```
 
-Open the deployment portal at:
-
-```txt
-https://internal-company.com/deploy
-```
+Then configure Cloudflare Access and domain routing as described above.
 
 ## Local Development
 

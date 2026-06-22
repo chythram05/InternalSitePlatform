@@ -20,9 +20,6 @@
       },
       "DISPATCH_NAMESPACE_API_TOKEN": {
         "description": "API token with **Account: Workers Scripts: Edit** permission for the account that owns the dispatch namespace."
-      },
-      "SITE_DOMAIN": {
-        "description": "Domain used for internal site URLs, for example `internal.example.com`. Configure routes for `/deploy` and `*.internal.example.com/*`."
       }
     }
   },
