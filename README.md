@@ -50,17 +50,11 @@ You can also click the **Deploy to Cloudflare** button above after this template
 npm install
 ```
 
-### 2. Create Required Cloudflare Resources
+### 2. Create the Dispatch Namespace
 
-Create a D1 database:
+Deploy to Cloudflare provisions the D1 database and binds it to the Worker automatically. You do not need to create a D1 database before clicking the deploy button.
 
-```bash
-npx wrangler d1 create internal-sites-template
-```
-
-Copy the returned database ID into `wrangler.toml` under `database_id`.
-
-Create the Workers for Platforms dispatch namespace:
+Create the Workers for Platforms dispatch namespace if you are deploying manually with Wrangler:
 
 ```bash
 npx wrangler dispatch-namespace create internal-sites-template
@@ -90,6 +84,12 @@ Account: Workers Scripts: Edit
 ```
 
 For local development, copy `.dev.vars.example` to `.dev.vars` and fill in your values.
+
+If you are not using Deploy to Cloudflare, create a D1 database manually and update the `database_id` in `wrangler.toml`:
+
+```bash
+npx wrangler d1 create internal-sites-template
+```
 
 ### 4. Configure Cloudflare Access
 
