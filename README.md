@@ -2,7 +2,7 @@
 
 Deploy internal static sites behind Cloudflare Access using [Cloudflare Workers for Platforms](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/) and [D1](https://developers.cloudflare.com/d1/).
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/internal-sites-template)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/chythra-w1/internal-sites-template)
 
 <!-- dash-content-start -->
 
@@ -37,10 +37,10 @@ Internal Sites gives employees a simple deployment portal for company-only stati
 Outside of this repository, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/):
 
 ```bash
-npm create cloudflare@latest -- --template=cloudflare/templates/internal-sites-template
+npm create cloudflare@latest -- --template=https://github.com/chythra-w1/internal-sites-template
 ```
 
-You can also click the **Deploy to Cloudflare** button above after this template is published in `cloudflare/templates`.
+You can also click the **Deploy to Cloudflare** button above to deploy from this repository.
 
 ## Setup Steps
 
