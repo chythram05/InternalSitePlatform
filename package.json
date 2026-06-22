@@ -1,0 +1,53 @@
+{
+  "name": "internal-sites-template",
+  "description": "Deploy internal static sites behind Cloudflare Access with Workers for Platforms and D1.",
+  "license": "Apache-2.0",
+  "private": true,
+  "cloudflare": {
+    "label": "Internal Sites",
+    "products": [
+      "Workers",
+      "Workers for Platforms",
+      "D1"
+    ],
+    "categories": [
+      "starter"
+    ],
+    "docs_url": "https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/",
+    "bindings": {
+      "ACCOUNT_ID": {
+        "description": "Your Cloudflare account ID. Find it in the Cloudflare dashboard account overview."
+      },
+      "DISPATCH_NAMESPACE_API_TOKEN": {
+        "description": "API token with **Account: Workers Scripts: Edit** permission for the account that owns the dispatch namespace."
+      },
+      "SITE_DOMAIN": {
+        "description": "Domain used for internal site URLs, for example `internal.example.com`. Configure routes for `/deploy` and `*.internal.example.com/*`."
+      }
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260621.1",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
+    "eslint": "^8.23.1",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.103.0"
+  },
+  "scripts": {
+    "dev": "npm run setup && wrangler dev --remote",
+    "build": "npm run setup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "check": "npm run typecheck && npm run lint",
+    "deploy": "npm run setup && wrangler deploy",
+    "setup": "node scripts/setup.js"
+  },
+  "dependencies": {
+    "fflate": "^0.8.2",
+    "hono": "^4.12.26"
+  }
+}
