@@ -10,7 +10,7 @@ Internal Sites gives employees a simple deployment portal for company-only stati
 
 ## Features
 
-- **Deployment portal** - Upload a folder or ZIP file from `/deploy`.
+- **Deployment portal** - Upoad a folder or ZIP file from `/deploy`.
 - **Static site hosting** - Publishes HTML, CSS, JavaScript, images, and other static assets using Workers static assets.
 - **Workers for Platforms** - Each internal site is deployed as a script in a dispatch namespace.
 - **Company sign-in** - Requests require Cloudflare Access identity headers before users can deploy or view sites.
