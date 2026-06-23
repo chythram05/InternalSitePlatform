@@ -2,7 +2,7 @@
 
 Deploy internal static sites behind Cloudflare Access using [Cloudflare Workers for Platforms](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/) and [D1](https://developers.cloudflare.com/d1/).
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://github.com/chythram05/InternalSitePlatform)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/chythram05/InternalSitePlatform)
 
 <!-- dash-content-start -->
 
