@@ -321,3 +321,50 @@ export async function SmokeTestStaticSiteDeploy(env: Env): Promise<{ ok: true; s
 
   return { ok: true, scriptName };
 }
+
+export async function CheckCloudflareApiConfiguration(env: Env): Promise<Record<string, unknown>> {
+  const tokenConfigured = Boolean(env.DISPATCH_NAMESPACE_API_TOKEN);
+  const accountIdConfigured = Boolean(env.ACCOUNT_ID);
+  const namespaceConfigured = Boolean(env.DISPATCH_NAMESPACE_NAME);
+
+  const result: Record<string, unknown> = {
+    accountIdConfigured,
+    namespaceConfigured,
+    namespace: env.DISPATCH_NAMESPACE_NAME || null,
+    tokenConfigured,
+  };
+
+  if (!tokenConfigured) {
+    return result;
+  }
+
+  result.tokenVerify = await readDiagnosticResponse(fetch('https://api.cloudflare.com/client/v4/user/tokens/verify', {
+    headers: MakeHeaders(env),
+  }));
+
+  if (accountIdConfigured && namespaceConfigured) {
+    result.dispatchNamespaceAccess = await readDiagnosticResponse(fetch(ScriptsURI(env), {
+      headers: MakeHeaders(env),
+    }));
+  }
+
+  return result;
+}
+
+async function readDiagnosticResponse(responsePromise: Promise<Response>): Promise<Record<string, unknown>> {
+  const response = await responsePromise;
+  const text = await response.text();
+  let data: CloudflareApiResponse<unknown> | null = null;
+
+  try {
+    data = JSON.parse(text) as CloudflareApiResponse<unknown>;
+  } catch {
+    return { ok: response.ok, status: response.status, error: text.slice(0, 300) };
+  }
+
+  return {
+    ok: response.ok && data.success,
+    status: response.status,
+    errors: data.errors?.map((error) => error.message).filter(Boolean) || [],
+  };
+}

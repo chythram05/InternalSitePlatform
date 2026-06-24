@@ -41,7 +41,7 @@ export function renderDeployPage(options: { siteDomain: string; deployPath: stri
           <label class="field">
             <span>Internal URL</span>
             <div class="url-row">
-              <input id="site-slug" name="slug" required pattern="[a-z0-9-]+" placeholder="team-handbook" autocomplete="off">
+              <input id="site-slug" name="slug" required pattern="[a-z0-9\\-]+" placeholder="team-handbook" autocomplete="off">
               <strong>.${escapeHtml(options.siteDomain)}</strong>
             </div>
           </label>

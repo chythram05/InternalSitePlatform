@@ -50,6 +50,8 @@ During the create and deploy flow, enter the prompted values:
 | `ACCOUNT_ID` | Cloudflare account ID that owns the Workers for Platforms dispatch namespace. |
 | `DISPATCH_NAMESPACE_API_TOKEN` | API token with `Account: Workers Scripts: Edit` permission. |
 
+If `DISPATCH_NAMESPACE_API_TOKEN` is not shown in the main setup form, expand **Advanced settings** in the Deploy to Cloudflare screen and add it there as a secret. This token is not a selectable Cloudflare resource binding; it must be created separately and pasted into the deploy form.
+
 The API token is used by the deployed platform to publish uploaded internal sites into the dispatch namespace.
 
 You do not need to edit `wrangler.toml` or manually create a D1 database when using the Deploy to Cloudflare button.

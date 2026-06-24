@@ -5,7 +5,7 @@ import { requireAccessIdentity } from './access';
 import { normalizeSlug, parseStaticSiteUpload } from './assets';
 import { CreateDeployment, CreateSite, FetchTable, GetSiteBySlug, HasSitesTable, Initialize, UpdateSite } from './db';
 import type { Env } from './env';
-import { DeleteScriptInDispatchNamespace, GetScriptsInDispatchNamespace, PutStaticSiteInDispatchNamespace, SmokeTestStaticAssetUpload, SmokeTestStaticSiteDeploy } from './resource';
+import { CheckCloudflareApiConfiguration, DeleteScriptInDispatchNamespace, GetScriptsInDispatchNamespace, PutStaticSiteInDispatchNamespace, SmokeTestStaticAssetUpload, SmokeTestStaticSiteDeploy } from './resource';
 import { BuildTable } from './render';
 import { withDb } from './router';
 import { Deployment, Site } from './types';
@@ -154,6 +154,17 @@ app.get('/api/debug/static-site', async (c) => {
 
   try {
     return c.json(await SmokeTestStaticSiteDeploy(c.env));
+  } catch (error) {
+    return c.json({ ok: false, error: errorMessage(error) }, 500);
+  }
+});
+
+app.get('/api/debug/cloudflare-api', async (c) => {
+  const identity = requireAccessIdentity(c.req.raw, c.env);
+  if (identity instanceof Response) return identity;
+
+  try {
+    return c.json(await CheckCloudflareApiConfiguration(c.env));
   } catch (error) {
     return c.json({ ok: false, error: errorMessage(error) }, 500);
   }
